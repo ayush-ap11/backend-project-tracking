@@ -14,6 +14,10 @@ const noteSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
+  },
+  isInternal: {
+    type: Boolean,
+    default: false, // Default false so Clients can see unless specified
   }
 }, { timestamps: true });
 

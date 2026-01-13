@@ -16,10 +16,12 @@ const projectSchema = new mongoose.Schema({
     default: Date.now
   },
   expectedEndDate: Date,
+  actualEndDate: Date,
+  delayReason: String,
   status: {
     type: String,
-    enum: ['Active', 'Completed', 'On Hold', 'Cancelled'],
-    default: 'Active'
+    enum: ['NOT_STARTED', 'IN_PROGRESS', 'ON_TRACK', 'DELAYED', 'COMPLETED', 'CANCELLED'],
+    default: 'NOT_STARTED'
   },
   teamMembers: [{
     type: mongoose.Schema.Types.ObjectId,

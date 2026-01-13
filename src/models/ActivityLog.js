@@ -1,21 +1,19 @@
 const mongoose = require('mongoose');
 
 const activityLogSchema = new mongoose.Schema({
+  projectId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Project',
+    required: true, 
+  },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
   },
   action: {
-    type: String,
+    type: String, // e.g., 'CREATED_PROJECT', 'UPDATED_TIMELINE'
     required: true,
-  },
-  entityType: {
-    type: String, // Project, Note, Stage
-    required: true,
-  },
-  entityId: {
-    type: mongoose.Schema.Types.ObjectId,
   },
   details: {
     type: String,

@@ -8,15 +8,27 @@ const projectStageSchema = new mongoose.Schema({
   },
   name: {
     type: String,
-    required: true, // e.g., 'Planning', 'Development', 'Testing'
+    required: true,
+  },
+  description: String,
+  assignedTo: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  },
+  status: {
+    type: String,
+    enum: ['NOT_STARTED', 'IN_PROGRESS', 'COMPLETED', 'ON_HOLD'],
+    default: 'NOT_STARTED',
+  },
+  progress: {
+    type: Number,
+    default: 0,
+    min: 0,
+    max: 100
   },
   order: {
     type: Number,
     required: true,
-  },
-  isCompleted: {
-    type: Boolean,
-    default: false,
   }
 }, { timestamps: true });
 

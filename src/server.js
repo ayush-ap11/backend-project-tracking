@@ -3,6 +3,9 @@ const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const connectDB = require("./config/db");
+const authRoutes = require("./routes/authRoutes");
+const projectRoutes = require("./routes/projectRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 
 dotenv.config();
@@ -16,8 +19,9 @@ app.use(cookieParser());
 app.use(cors());
 
 // Routes
-app.use("/api/auth", require("./routes/authRoutes"));
-app.use("/api/projects", require("./routes/projectRoutes"));
+app.use("/api/auth", authRoutes);
+app.use("/api/projects", projectRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 app.get("/", (req, res) => {
   res.send("API is running...");
