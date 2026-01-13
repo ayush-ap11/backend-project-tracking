@@ -14,6 +14,21 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error("Please fill all required fields");
   }
 
+  // Enforce validation for TEAM role
+  if (role === "TEAM" && !experienceYears) {
+    res.status(400);
+    throw new Error("Experience years is required for TEAM role");
+  }
+
+  // Enforce Single Admin Policy
+  if (role === "ADMIN") {
+    const adminExists = await User.findOne({ role: "ADMIN" });
+    if (adminExists) {
+      res.status(400);
+      throw new Error("An Admin already exists");
+    }
+  }
+
   const userExists = await User.findOne({ email });
   if (userExists) {
     res.status(400);
