@@ -20,7 +20,7 @@ const projectSchema = new mongoose.Schema({
   delayReason: String,
   status: {
     type: String,
-    enum: ['NOT_STARTED', 'IN_PROGRESS', 'ON_TRACK', 'DELAYED', 'COMPLETED', 'CANCELLED'],
+    enum: ['NOT_STARTED', 'IN_PROGRESS', 'ON_TRACK', 'DELAYED', 'COMPLETED', 'CANCELLED', 'PLANNED', 'ACTIVE', 'ON_HOLD'],
     default: 'NOT_STARTED'
   },
   teamMembers: [{

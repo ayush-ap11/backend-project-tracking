@@ -7,6 +7,7 @@ const {
   updateProject,
   deleteProject,
   addNoteToProject,
+  getProjectNotes,
   updateTimeline
 } = require('../controllers/projectController');
 const { protect } = require('../middleware/authMiddleware');
@@ -38,6 +39,7 @@ const stageRoutes = require('./stageRoutes');
 
 // Note/Comment: Client (and Admin/Team)
 router.route('/:id/note')
+  .get(protect, authorize('ADMIN', 'TEAM', 'CLIENT'), getProjectNotes)
   .post(protect, authorize('ADMIN', 'TEAM', 'CLIENT'), addNoteToProject);
 
 // Re-route into other resource routers
