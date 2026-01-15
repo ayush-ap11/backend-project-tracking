@@ -110,4 +110,14 @@ const logoutUser = (req, res) => {
   res.status(200).json({ message: "Logged out successfully" });
 };
 
-module.exports = { registerUser, loginUser, logoutUser };
+// @desc    Get users (by role or all)
+// @route   GET /api/auth/users
+// @access  Private (Admin)
+const getUsers = asyncHandler(async (req, res) => {
+  const { role } = req.query;
+  const query = role ? { role } : {};
+  const users = await User.find(query).select("-passwordHash");
+  res.json(users);
+});
+
+module.exports = { registerUser, loginUser, logoutUser, getUsers };
