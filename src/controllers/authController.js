@@ -3,9 +3,6 @@ const bcrypt = require("bcryptjs");
 const generateToken = require("../utils/generateToken");
 const asyncHandler = require("../middleware/asyncHandler");
 
-// @desc    Register a new user
-// @route   POST /api/auth/register
-// @access  Public
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password, role, phone, experienceYears } = req.body;
 
@@ -14,13 +11,11 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error("Please fill all required fields");
   }
 
-  // Enforce validation for TEAM role
   if (role === "TEAM" && !experienceYears) {
     res.status(400);
     throw new Error("Experience years is required for TEAM role");
   }
 
-  // Enforce Single Admin Policy
   if (role === "ADMIN") {
     const adminExists = await User.findOne({ role: "ADMIN" });
     if (adminExists) {
@@ -62,9 +57,6 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Auth user & get token
-// @route   POST /api/auth/login
-// @access  Public
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
@@ -99,9 +91,6 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Logout user / clear cookie
-// @route   POST /api/auth/logout
-// @access  Public
 const logoutUser = (req, res) => {
   res.cookie("jwt", "", {
     httpOnly: true,
@@ -110,9 +99,6 @@ const logoutUser = (req, res) => {
   res.status(200).json({ message: "Logged out successfully" });
 };
 
-// @desc    Get users (by role or all)
-// @route   GET /api/auth/users
-// @access  Private (Admin)
 const getUsers = asyncHandler(async (req, res) => {
   const { role } = req.query;
   const query = role ? { role } : {};

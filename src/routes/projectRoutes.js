@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 const {
   createProject,
@@ -8,41 +8,37 @@ const {
   deleteProject,
   addNoteToProject,
   getProjectNotes,
-  updateTimeline
-} = require('../controllers/projectController');
-const { protect } = require('../middleware/authMiddleware');
-const { authorize } = require('../middleware/roleMiddleware');
+  updateTimeline,
+  getProjectActivity,
+} = require("../controllers/projectController");
+const { protect } = require("../middleware/authMiddleware");
+const { authorize } = require("../middleware/roleMiddleware");
+const stageRoutes = require("./stageRoutes");
 
-// Get all projects: Admin, Team, Client
-// Create project: Admin only
-router.route('/')
-  .get(protect, authorize('ADMIN', 'TEAM', 'CLIENT'), getProjects)
-  .post(protect, authorize('ADMIN'), createProject);
+router
+  .route("/")
+  .get(protect, authorize("ADMIN", "TEAM", "CLIENT"), getProjects)
+  .post(protect, authorize("ADMIN"), createProject);
 
-// Timeline: Admin only
-router.put('/:id/timeline', protect, authorize('ADMIN'), updateTimeline);
+router.put("/:id/timeline", protect, authorize("ADMIN"), updateTimeline);
+router.get(
+  "/:id/activity",
+  protect,
+  authorize("ADMIN", "CLIENT"),
+  getProjectActivity
+);
 
-// Activity Log: Admin, Client
-const { getProjectActivity } = require('../controllers/projectController');
-router.get('/:id/activity', protect, authorize('ADMIN', 'CLIENT'), getProjectActivity);
+router
+  .route("/:id")
+  .get(protect, authorize("ADMIN", "TEAM", "CLIENT"), getProjectById)
+  .put(protect, authorize("ADMIN", "TEAM"), updateProject)
+  .delete(protect, authorize("ADMIN"), deleteProject);
 
-// ID operations
-// Get: Admin, Team, Client
-// Put: Admin, Team
-// Delete: Admin only
-router.route('/:id')
-  .get(protect, authorize('ADMIN', 'TEAM', 'CLIENT'), getProjectById)
-  .put(protect, authorize('ADMIN', 'TEAM'), updateProject)
-  .delete(protect, authorize('ADMIN'), deleteProject);
+router
+  .route("/:id/note")
+  .get(protect, authorize("ADMIN", "TEAM", "CLIENT"), getProjectNotes)
+  .post(protect, authorize("ADMIN", "TEAM", "CLIENT"), addNoteToProject);
 
-const stageRoutes = require('./stageRoutes');
-
-// Note/Comment: Client (and Admin/Team)
-router.route('/:id/note')
-  .get(protect, authorize('ADMIN', 'TEAM', 'CLIENT'), getProjectNotes)
-  .post(protect, authorize('ADMIN', 'TEAM', 'CLIENT'), addNoteToProject);
-
-// Re-route into other resource routers
-router.use('/:projectId/stages', stageRoutes);
+router.use("/:projectId/stages", stageRoutes);
 
 module.exports = router;

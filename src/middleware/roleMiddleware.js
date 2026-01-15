@@ -6,10 +6,12 @@ const authorize = (...roles) => {
     }
 
     if (!roles.includes(req.user.role)) {
-      res.status(403); // Forbidden
-      throw new Error(`User role '${req.user.role}' is not authorized to access this route`);
+      res.status(403);
+      throw new Error(
+        `User role '${req.user.role}' is not authorized to access this route`
+      );
     }
-    
+
     next();
   };
 };

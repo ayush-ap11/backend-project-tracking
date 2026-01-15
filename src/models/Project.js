@@ -23,6 +23,12 @@ const projectSchema = new mongoose.Schema({
     enum: ['NOT_STARTED', 'IN_PROGRESS', 'ON_TRACK', 'DELAYED', 'COMPLETED', 'CANCELLED', 'PLANNED', 'ACTIVE', 'ON_HOLD'],
     default: 'NOT_STARTED'
   },
+  progress: {
+    type: Number,
+    default: 0,
+    min: 0,
+    max: 100
+  },
   teamMembers: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'

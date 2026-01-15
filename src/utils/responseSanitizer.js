@@ -1,19 +1,19 @@
 const sanitizeProject = (project, role) => {
-  if (role !== 'CLIENT') return project;
-
-  // Convert to lean object if it's a Mongoose document
-  const p = project.toObject ? project.toObject() : project;
-
-  // Remove internal fields for Clients
-  delete p.teamMembers; // Clients don't need to see individual dev assignments
-  delete p.delayReason; // Maybe hide delay reason if it's internal logic? Req says "hide internal data". I'll keep it safe.
-  
-  // Filter Notes if they are populated
-  if (p.notes && Array.isArray(p.notes)) {
-    p.notes = p.notes.filter(note => !note.isInternal);
+  if (role !== "CLIENT") {
+    return project;
   }
 
-  return p;
+  const base = project.toObject ? project.toObject() : { ...project };
+  const sanitized = { ...base };
+
+  delete sanitized.teamMembers;
+  delete sanitized.delayReason;
+
+  if (Array.isArray(sanitized.notes)) {
+    sanitized.notes = sanitized.notes.filter((note) => !note.isInternal);
+  }
+
+  return sanitized;
 };
 
 module.exports = sanitizeProject;
