@@ -13,12 +13,18 @@ connectDB();
 
 const app = express();
 
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  "http://localhost:5173",
+  "https://frontend-project-tracking.vercel.app",
+].filter(Boolean); // Allow local dev and deployed frontend
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: allowedOrigins,
     credentials: true,
   })
 );
